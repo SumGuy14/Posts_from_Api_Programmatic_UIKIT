@@ -21,7 +21,7 @@ extension SocialMedia {
     }
     func getData(){
         NetworkManager.shared.getDataFrom(string: URls.postsURL.rawValue) { [weak self] posts in
-            self.posts = posts
+            self?.posts = posts
             DispatchQueue.main.async(){
                 self?.postsTable.reloadData()
             }

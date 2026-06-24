@@ -4,7 +4,7 @@
 //
 //  Created by Sumedh Kulkarni on 6/23/26.
 //
-Import foundation
+import Foundation
 
 protocol NetworkProtocol:Sendable{
     func getDataFrom(string: String,completion: @escaping ([Post])->Void)
@@ -12,18 +12,21 @@ protocol NetworkProtocol:Sendable{
 final class NetworkManager:NetworkProtocol{
     static let shared = NetworkManager()
     func getDataFrom(string: String, completion: @escaping ([Post]) -> Void) {
-//        guard let serverURl =URL(string: URls.postsURL.rawValue) else{
-//            print("invalid URL")
-//            return
-//        }
-        URLSession.shared.dataTask(with: URLRequest(url: URls.postsURL.rawValue) { data, response, error in
+        guard let serverURL = URL(string: URls.postsURL.rawValue) else{
+            print("invalid URL")
+            return
+        }
+        let urlRequest = URLRequest(url: serverURL)
+        let urlSession = URLSession.shared
+        urlSession.dataTask(with: urlRequest ) { data, response, error in
             guard let data = data else{
                 print("data is nil")
                 return
             }
             do{
-                let decodedData = JSONDecoder().decode([Post].self, from: data)
+                let decodedData = try JSONDecoder().decode([Post].self, from: data)
                 print(decodedData.count)
+                completion(decodedData)
             } catch {
                 print(error)
             }
