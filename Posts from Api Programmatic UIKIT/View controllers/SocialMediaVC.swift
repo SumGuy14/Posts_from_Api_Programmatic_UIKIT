@@ -1,10 +1,3 @@
-//
-//  ViewController.swift
-//  Posts from Api Programmatic UIKIT
-//
-//  Created by Sumedh Kulkarni on 6/23/26.
-//
-
 import UIKit
 
 class SocialMedia: UIViewController, UITableViewDataSource,UITableViewDelegate {
@@ -13,27 +6,48 @@ class SocialMedia: UIViewController, UITableViewDataSource,UITableViewDelegate {
         let table = UITableView()
         return table
     }()
-    var posts: [Post] = []
+    var viewmodel: SocialMediaViewModel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        setupUI()
-        getData()
+        
+        
         postsTable.dataSource = self
         postsTable.delegate = self
         postsTable.register(PostCell.self, forCellReuseIdentifier: CellNames.postCell.rawValue)
+        setupUI()
+        viewmodel.getData {
+            DispatchQueue.main.async(){
+                self.postsTable.reloadData()
+            }
+        }
     }
 }
 extension SocialMedia{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        posts.count
+        viewmodel.getCellCount()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CellNames.postCell.rawValue) as? PostCell
-        cell?.loadCellData(post: posts[indexPath.row])
+        cell?.loadCellData(post: viewmodel.getCellAt(index: indexPath.row))
         return cell ?? UITableViewCell()
+    }
+    
+}
+extension SocialMedia {
+    func setupUI(){
+        view.addSubview(postsTable)
+        postsTable.rowHeight = UITableView.automaticDimension
+        postsTable.estimatedRowHeight = 200
+        postsTable.translatesAutoresizingMaskIntoConstraints = false
+        postsTable.register(PostCell.self, forCellReuseIdentifier: CellNames.postCell.rawValue)
+        NSLayoutConstraint.activate([
+            postsTable.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            postsTable.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            postsTable.topAnchor.constraint(equalTo: view.topAnchor),
+            postsTable.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
     }
     
 }

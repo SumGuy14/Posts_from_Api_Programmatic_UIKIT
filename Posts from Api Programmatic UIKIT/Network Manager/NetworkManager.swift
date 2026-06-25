@@ -11,6 +11,7 @@ protocol NetworkProtocol:Sendable{
 }
 final class NetworkManager:NetworkProtocol{
     static let shared = NetworkManager()
+    private init(){}
     func getDataFrom(string: String, completion: @escaping ([Post]) -> Void) {
         guard let serverURL = URL(string: URls.postsURL.rawValue) else{
             print("invalid URL")

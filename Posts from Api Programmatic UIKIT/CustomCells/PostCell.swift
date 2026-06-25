@@ -9,13 +9,13 @@ import UIKit
 
 class PostCell: UITableViewCell {
 // all components to show get initialized here
-    var postImage: UIImageView   = {
+   private let postImage: UIImageView   = {
        let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
         image.image = UIImage(systemName: "person.circle")
         return image
     }()
-    var postTitle: UILabel = {
+    private let  postTitle: UILabel = {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 30)
